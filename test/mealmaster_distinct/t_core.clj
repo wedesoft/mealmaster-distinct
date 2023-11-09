@@ -30,4 +30,5 @@
        (header? "abc") => falsey
        (header? "MMMMM----- Meal-Master-Tools fuer Windows V0.1") => truthy
        (header? "abc MMMMM----- Meal-Master-Tools fuer Windows V0.1") => falsey
-       (header? "---------- Meal-Master-Tools fuer Windows V0.1") => truthy)
+       (header? "---------- Meal-Master-Tools fuer Windows V0.1") => truthy
+       (header? "---------- Recipe Software") => falsey)
