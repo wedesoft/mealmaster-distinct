@@ -5,6 +5,6 @@
   (let [directory (or directory "input")]
     (map #(str directory \/ %) (.list (clojure.java.io/file directory)))))
 
-(defn lines [filename]
+(defn lines [file]
   "Read lines from a text file"
-  (line-seq (clojure.java.io/reader filename)))
+  (line-seq file))
