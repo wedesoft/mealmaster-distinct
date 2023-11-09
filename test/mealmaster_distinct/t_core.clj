@@ -28,7 +28,8 @@
 
 (facts "Check for header"
        (header? "abc") => falsey
-       (header? "MMMMM----- Meal-Master-Tools fuer Windows V0.1") => truthy
-       (header? "abc MMMMM----- Meal-Master-Tools fuer Windows V0.1") => falsey
-       (header? "---------- Meal-Master-Tools fuer Windows V0.1") => truthy
+       (header? "MMMMM----- Recipe via Meal-Master (tm) v8.01") => truthy
+       (header? "abc ---------- Recipe via Meal-Master (tm) v8.01") => falsey
+       (header? "---------- Recipe via Meal-Master (tm) v8.01") => truthy
+       (header? "---------- MEAL-MASTER ----------") => truthy
        (header? "---------- Recipe Software") => falsey)
