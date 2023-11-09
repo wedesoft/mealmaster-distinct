@@ -1,10 +1,12 @@
-(ns mealmaster-distinct.core)
+(ns mealmaster-distinct.core
+    (:require [clojure.set :refer (union)])
+    (:gen-class))
 
-(defn file-names
+(defn filenames
   "Get file names of input directory"
-  [directory]
-  (let [directory (or directory "input")]
-    (map #(str directory \/ %) (.list (clojure.java.io/file directory)))))
+  ([] (filenames "input"))
+  ([directory]
+   (map #(str directory \/ %) (.list (clojure.java.io/file directory)))))
 
 (defn lines
   "Read lines from a text file"
@@ -37,3 +39,17 @@
      (if (header? line)
        (assoc state :in-progress (str line "\r\n"))
        state))))
+
+(defn read-recipes
+  "Read a set of Mealmaster recipes from a text file"
+  [filename]
+  (.println *err* filename)
+  (with-open [reader (clojure.java.io/reader filename :encoding "ISO-8859-15")]
+    (join-recipes (map filter-printable (lines reader)))))
+
+(defn -main
+  "Main method to deduplicate recipe collection"
+  [& _args]
+  (with-open [writer (clojure.java.io/writer "output/recipes.mm" :encoding "ISO-8859-15")]
+    (doseq [recipe (apply union (map read-recipes (filenames)))]
+           (.write writer recipe))))

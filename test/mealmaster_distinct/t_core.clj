@@ -3,7 +3,7 @@
               [mealmaster-distinct.core :refer :all]))
 
 (fact "Get file names from input directory"
-      (file-names "test/mealmaster_distinct/fixtures/file-names")
+      (filenames "test/mealmaster_distinct/fixtures/file-names")
       => ["test/mealmaster_distinct/fixtures/file-names/testfile.txt"])
 
 (fact "Read lines from a Unix file"
@@ -19,7 +19,8 @@
       => ["text\000more text"])
 
 (fact "Filter for printable characters"
-      (filter-printable "text\r\nmore\ttext \007\377 finish") => "text\r\nmore\ttext \377 finish")
+      (filter-printable "text\r\nmore\ttext \007\377 finish") => "text\r\nmore\ttext \377 finish"
+      (filter-printable "äöü") => "äöü")
 
 (facts "Check for footer"
        (footer? "abc") => falsey
@@ -44,3 +45,6 @@
        (join-recipes [header]) => #{}
        (join-recipes [header content footer]) => #{recipe}
        (join-recipes [content header content footer content]) => #{recipe})
+
+(fact "Read in a set of recipes"
+      (read-recipes "test/mealmaster_distinct/fixtures/read-recipes.txt") => #{recipe})
