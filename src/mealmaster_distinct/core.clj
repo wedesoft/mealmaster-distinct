@@ -34,7 +34,7 @@
   ([state line]
    (if (:in-progress state)
      (if (footer? line)
-       {:recipes (conj (:recipes state) (str (:in-progress state) line "\r\n"))}
+       {:recipes (conj (:recipes state) (str (:in-progress state) line "\r\n\r\n"))}
        (update state :in-progress #(str % line "\r\n")))
      (if (header? line)
        (assoc state :in-progress (str line "\r\n"))
