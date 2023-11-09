@@ -33,3 +33,14 @@
        (header? "---------- Recipe via Meal-Master (tm) v8.01") => truthy
        (header? "---------- MEAL-MASTER ----------") => truthy
        (header? "---------- Recipe Software") => falsey)
+
+(def header "MMMMM----- Recipe via Meal-Master (tm) v8.01")
+(def content "Test content")
+(def footer "MMMMM")
+(def recipe (str header "\r\n" content "\r\n" footer "\r\n"))
+
+(facts "Join lines of recipes"
+       (join-recipes []) => #{}
+       (join-recipes [header]) => #{}
+       (join-recipes [header content footer]) => #{recipe}
+       (join-recipes [content header content footer content]) => #{recipe})
