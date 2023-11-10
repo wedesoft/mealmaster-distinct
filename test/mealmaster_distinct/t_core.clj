@@ -35,16 +35,41 @@
        (header? "---------- MEAL-MASTER ----------") => truthy
        (header? "---------- Recipe Software") => falsey)
 
+(facts "Extract section title"
+       (extract-section "abc") => nil
+       (extract-section "MMMMM----- main -----") => "main"
+       (extract-section "MMMMM----- Recipe via Meal-Master (tm) v8.01") => nil
+       (extract-section "MMMMM") => nil
+       (extract-section "---------- main -----") => "main")
+
 (def header "MMMMM----- Recipe via Meal-Master (tm) v8.01")
 (def content "Test content")
 (def footer "MMMMM")
-(def recipe (str header "\r\n" content "\r\n" footer "\r\n\r\n"))
+(def recipe-lines [header content footer])
+(def recipe (str header "\r\n" content "\r\n" footer))
+(def normalized (str "MMMMM-----Meal-Master-----" "\r\n" content "\r\n" footer))
 
 (facts "Join lines of recipes"
-       (join-recipes []) => #{}
-       (join-recipes [header]) => #{}
-       (join-recipes [header content footer]) => #{recipe}
-       (join-recipes [content header content footer content]) => #{recipe})
+       (group-recipes []) => []
+       (group-recipes [header]) => []
+       (group-recipes [header content footer]) => [recipe-lines]
+       (group-recipes [content header content footer content]) => [recipe-lines])
+
+(fact "Concatenate recipe lines"
+       (concat-lines recipe-lines) => recipe)
+
+(fact "Normalize line of recipe for improved deduplication"
+      (canonical "Test text") => "Test text"
+      (canonical "MMMMM----- Recipe via Meal-Master (tm) v8.01") => "MMMMM-----Meal-Master-----"
+      (canonical "-----") => "MMMMM"
+      (canonical " Title: recipe name") => "      Title: recipe name"
+      (canonical "The Title: recipe name") => "The Title: recipe name"
+      (canonical "  Categories: Beverages, Coffee") => " Categories: Beverages, Coffee"
+      (canonical "Has  Categories: Beverages, Coffee") => "Has  Categories: Beverages, Coffee"
+      (canonical "  Yield: 2 servings") => "      Yield: 2 servings"
+      (canonical "The Yield: 2 servings") => "The Yield: 2 servings"
+      (canonical " Servings: 2 servings") => "      Yield: 2 servings"
+      (canonical "-------- main ---") => "MMMMM-----main-----")
 
 (fact "Read in a set of recipes"
-      (read-recipes "test/mealmaster_distinct/fixtures/read-recipes.txt") => #{recipe})
+      (read-recipes "test/mealmaster_distinct/fixtures/read-recipes.txt") => {normalized recipe})
