@@ -133,4 +133,5 @@
   [& _args]
   (with-open [writer (clojure.java.io/writer "output/recipes.mm" :encoding "ISO-8859-15")]
     (doseq [recipe (vals (apply merge (map read-recipes (filenames))))]
-           (.write writer recipe))))
+           (.write writer recipe)
+           (.write writer "\r\n\r\n"))))
