@@ -76,20 +76,10 @@
     "MMMMM"
     line))
 
-(defn normalize-title
-  "Align title tag"
-  [line]
-  (string/replace line #"^ *Title:" "      Title:"))
-
-(defn normalize-categories
-  "Align category tag"
-  [line]
-  (string/replace line #"^\ *Categories:" " Categories:"))
-
 (defn normalize-yield
   "Align yield/servings"
   [line]
-  (string/replace line #"^\ *(Yield|Servings):" "      Yield:"))
+  (string/replace line #"^\ *(Yield|Servings):" "Yield:"))
 
 (defn build-section
   "Create a canonical section header"
@@ -105,16 +95,22 @@
             build-section)
     line))
 
+(defn normalize-line
+  "Align category tag"
+  [line]
+  (-> line
+      (string/replace #"^ *" "")
+      (string/replace #" *$" "")))
+
 (defn canonical
   "Determine canonical form of line"
   [line]
   (-> line
       normalize-header
       normalize-footer
-      normalize-title
-      normalize-categories
       normalize-yield
-      normalize-section))
+      normalize-section
+      normalize-line))
 
 (defn categorize
   "Create hash map from canonical recipe to recipe"

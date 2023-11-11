@@ -60,15 +60,16 @@
 
 (fact "Normalize line of recipe for improved deduplication"
       (canonical "Test text") => "Test text"
+      (canonical "  Test text  ") => "Test text"
       (canonical "MMMMM----- Recipe via Meal-Master (tm) v8.01") => "MMMMM-----Meal-Master-----"
       (canonical "-----") => "MMMMM"
-      (canonical " Title: recipe name") => "      Title: recipe name"
+      (canonical " Title: recipe name") => "Title: recipe name"
       (canonical "The Title: recipe name") => "The Title: recipe name"
-      (canonical "  Categories: Beverages, Coffee") => " Categories: Beverages, Coffee"
+      (canonical "  Categories: Beverages, Coffee") => "Categories: Beverages, Coffee"
       (canonical "Has  Categories: Beverages, Coffee") => "Has  Categories: Beverages, Coffee"
-      (canonical "  Yield: 2 servings") => "      Yield: 2 servings"
+      (canonical "  Yield: 2 servings") => "Yield: 2 servings"
       (canonical "The Yield: 2 servings") => "The Yield: 2 servings"
-      (canonical " Servings: 2 servings") => "      Yield: 2 servings"
+      (canonical " Servings: 2 servings") => "Yield: 2 servings"
       (canonical "-------- main ---") => "MMMMM-----main-----")
 
 (fact "Read in a set of recipes"
